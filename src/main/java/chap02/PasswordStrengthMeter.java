@@ -4,15 +4,19 @@ public class PasswordStrengthMeter {
     public PasswordStrength meter(String password) {
         if(password==null||password.isEmpty())return PasswordStrength.INVALID;
 
-        int metCounts=0;
-
-        if(password.length()>=8)metCounts++;
-        if(isContainsNumber(password))metCounts++;
-        if(isContainsUpperCase(password))metCounts++;
+        int metCounts = getMetCounts(password);
 
         if(metCounts<=1)return PasswordStrength.WEAK;
         if(metCounts==2)return PasswordStrength.NORMAL;
         return PasswordStrength.STRONG;
+    }
+
+    private int getMetCounts(String password) {
+        int metCounts=0;
+        if(password.length()>=8) metCounts++;
+        if(isContainsNumber(password)) metCounts++;
+        if(isContainsUpperCase(password)) metCounts++;
+        return metCounts;
     }
 
     private boolean isContainsUpperCase(String password) {
