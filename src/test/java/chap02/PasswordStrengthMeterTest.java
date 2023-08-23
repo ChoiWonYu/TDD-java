@@ -55,4 +55,11 @@ public class PasswordStrengthMeterTest {
       //when
         assertStrength("abc!12345",PasswordStrength.NORMAL);
      }
+
+     @Test
+     @DisplayName("길이가 8글자 이상인 조건만 충족하는 경우")
+     public void PasswordStrengthMeterTest() throws Exception {
+       //when
+        assertStrength("aaaaaaaaa",PasswordStrength.WEAK);
+      }
 }
