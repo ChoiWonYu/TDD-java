@@ -39,6 +39,13 @@ public class PasswordStrengthMeterTest {
 
         //then
         assertStrength(password,PasswordStrength.NORMAL);
+    }
 
+    @Test
+    @DisplayName("값이 없는 경우")
+    public void nullput_Then_Invalid() throws Exception {
+      //when
+       assertStrength(null,PasswordStrength.INVALID);
+       assertStrength("",PasswordStrength.INVALID);
     }
 }
