@@ -8,15 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PasswordStrengthMeterTest {
     private PasswordStrengthMeter meter=new PasswordStrengthMeter();
 
+    private void assertStrength(String password,PasswordStrength expStr){
+        assertEquals(expStr,meter.meter(password));
+    }
     @Test
     @DisplayName("모든 규칙을 충족하는 경우")
     public void meetsAllCriteria_Then_String() throws Exception {
         //given
         String password = "ab12!@AB";
-        //when
-        PasswordStrength result = meter.meter(password);
+
         //then
-        assertEquals(PasswordStrength.STRONG, result);
+        assertStrength(password,PasswordStrength.STRONG);
     }
 
     @Test
@@ -24,10 +26,9 @@ public class PasswordStrengthMeterTest {
     public void meetsOtherCritia_except_for_Length_then_Normal() throws Exception {
         //given
         String password = "ab12!@A";
-        //when
-        PasswordStrength result = meter.meter(password);
+
         //then
-        assertEquals(result, PasswordStrength.NORMAL);
+        assertStrength(password,PasswordStrength.NORMAL);
     }
 
     @Test
@@ -35,9 +36,9 @@ public class PasswordStrengthMeterTest {
     public void meetsOtherCritia_except_for_number_then_Normal() throws Exception {
         //given
         String password = "ab!@ABqwer";
-        //when
-        PasswordStrength result = meter.meter(password);
+
         //then
-        assertEquals(result, PasswordStrength.NORMAL);
+        assertStrength(password,PasswordStrength.NORMAL);
+
     }
 }
