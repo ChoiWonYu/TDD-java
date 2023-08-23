@@ -6,11 +6,17 @@ public class PasswordStrengthMeter {
         if(password.length()<8){
             return PasswordStrength.NORMAL;
         }
-        if(!isContainNumber(password))return PasswordStrength.NORMAL;
+        if(!isContainsNumber(password))return PasswordStrength.NORMAL;
+        if(!isContainsUpperCase(password))return PasswordStrength.NORMAL;
         return PasswordStrength.STRONG;
     }
 
-    private boolean isContainNumber(String password){
+    private boolean isContainsUpperCase(String password) {
+        long upperCaseCount=password.chars().filter(Character::isUpperCase).count();
+        return upperCaseCount>0;
+    }
+
+    private boolean isContainsNumber(String password){
         long numCount=password.chars().filter(Character::isDigit).count();
         return numCount>0;
     }

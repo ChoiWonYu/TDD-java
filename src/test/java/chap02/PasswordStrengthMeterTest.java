@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PasswordStrengthMeterTest {
-    private PasswordStrengthMeter meter=new PasswordStrengthMeter();
+    private final PasswordStrengthMeter meter=new PasswordStrengthMeter();
 
     private void assertStrength(String password,PasswordStrength expStr){
         assertEquals(expStr,meter.meter(password));
@@ -48,4 +48,11 @@ public class PasswordStrengthMeterTest {
        assertStrength(null,PasswordStrength.INVALID);
        assertStrength("",PasswordStrength.INVALID);
     }
+    
+    @Test
+    @DisplayName("대문자를 포함하지 않고 나머지 조건을 충족하는 경우")
+    public void meetsOtherCritia_except_for_UpperCase_then_Normal() throws Exception {
+      //when
+        assertStrength("abc!12345",PasswordStrength.NORMAL);
+     }
 }
