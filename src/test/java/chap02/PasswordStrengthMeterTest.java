@@ -58,8 +58,15 @@ public class PasswordStrengthMeterTest {
 
      @Test
      @DisplayName("길이가 8글자 이상인 조건만 충족하는 경우")
-     public void PasswordStrengthMeterTest() throws Exception {
+     public void meetsOnlyNumCriteria_Then_Weak() throws Exception {
        //when
         assertStrength("aaaaaaaaa",PasswordStrength.WEAK);
       }
+
+    @Test
+    @DisplayName("숫자 포함 조건만 충족하는 경우")
+    public void meetsOnlyUpperCriteria_Then_Weak() throws Exception {
+        //when
+        assertStrength("1234",PasswordStrength.WEAK);
+    }
 }
