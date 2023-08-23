@@ -76,4 +76,11 @@ public class PasswordStrengthMeterTest {
         //when
         assertStrength("ABZE",PasswordStrength.WEAK);
     }
+
+    @Test
+    @DisplayName("아무 조건도 충족하지 못했을 경우")
+    public void meetsNoCriteria_Then_Weak() throws Exception {
+        //when
+        assertStrength("aa",PasswordStrength.WEAK);
+    }
 }
