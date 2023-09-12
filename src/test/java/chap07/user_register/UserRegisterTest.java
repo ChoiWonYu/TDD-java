@@ -13,11 +13,12 @@ class UserRegisterTest {
     private UserRegister userRegister;
     private MemoryUserRepository userRepository=new MemoryUserRepository();
     private StubPasswordChecker stubPasswordChecker = new StubPasswordChecker();
+    private SpyEmailNotifier emailNotifier=new SpyEmailNotifier();
 
 
     @BeforeEach
     void setUp() {
-        userRegister=new UserRegister(stubPasswordChecker,userRepository);
+        userRegister=new UserRegister(stubPasswordChecker,userRepository,emailNotifier);
     }
 
     @Test
@@ -49,5 +50,14 @@ class UserRegisterTest {
 
         assertEquals("id",savedUser.getId());
         assertEquals("email",savedUser.getEmail());
+    }
+
+    @Test
+    @DisplayName("가입하면 메일을 전송")
+    void sendEmailWhenRegister() {
+        userRegister.register("id", "pw", "email@email.com");
+
+        assertEquals(emailNotifier.isCalled(),true);
+        assertEquals("email@email.com",emailNotifier.getEmail());
     }
 }
