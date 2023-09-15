@@ -2,6 +2,7 @@ package chap07.user_register;
 
 import chap07.user_register.exception.DupIdException;
 import chap07.user_register.exception.WeakPasswordException;
+import chap07.user_register.type.WeakPasswordChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,28 +19,39 @@ class UserRegisterTest {
     private UserRegister userRegister;
     private MemoryUserRepository userRepository=new MemoryUserRepository();
     @Mock
-    private StubPasswordChecker stubPasswordChecker = new StubPasswordChecker();
+    private WeakPasswordChecker mockPasswordChecker;
     @Mock
-    private SpyEmailNotifier emailNotifier=new SpyEmailNotifier();
+    private SpyEmailNotifier emailNotifier;
 
 
     @BeforeEach
     void setUp() {
-        userRegister=new UserRegister(stubPasswordChecker,userRepository,emailNotifier);
+        userRegister=new UserRegister(mockPasswordChecker,userRepository,emailNotifier);
     }
 
     @Test
     @DisplayName("약한 암호면 가입 실패")
     void weakPassword() {
         //given
-        //약한 암호가 주어지면
-        BDDMockito.given(stubPasswordChecker.isPasswordWeak("pw")).willReturn(true);
+        //모의 객체가 다음과 같이 행동하도록 설정한다.
+        BDDMockito.given(mockPasswordChecker.isPasswordWeak("pw")).willReturn(true);
 
         //then
         //유저를 등록했을 때 예외
         assertThrows(WeakPasswordException.class,()->{
             userRegister.register("id","pw","email");
         });
+    }
+
+    @Test
+    @DisplayName("회원 가입시 암호 검사 수행함")
+    void checkPassword() {
+        userRegister.register("id","pw","email");
+
+        BDDMockito.then(mockPasswordChecker)
+                .should()
+                .isPasswordWeak(BDDMockito.anyString());
+
     }
 
     @Test
