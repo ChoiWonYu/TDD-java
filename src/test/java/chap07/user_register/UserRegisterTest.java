@@ -2,11 +2,13 @@ package chap07.user_register;
 
 import chap07.user_register.exception.DupIdException;
 import chap07.user_register.exception.WeakPasswordException;
+import chap07.user_register.type.EmailNotifier;
 import chap07.user_register.type.WeakPasswordChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,12 +23,12 @@ class UserRegisterTest {
     @Mock
     private WeakPasswordChecker mockPasswordChecker;
     @Mock
-    private SpyEmailNotifier emailNotifier;
+    private EmailNotifier mockEmailNotifier;
 
 
     @BeforeEach
     void setUp() {
-        userRegister=new UserRegister(mockPasswordChecker,userRepository,emailNotifier);
+        userRegister=new UserRegister(mockPasswordChecker,userRepository,mockEmailNotifier);
     }
 
     @Test
@@ -80,7 +82,12 @@ class UserRegisterTest {
     void sendEmailWhenRegister() {
         userRegister.register("id", "pw", "email@email.com");
 
-        assertEquals(emailNotifier.isCalled(),true);
-        assertEquals("email@email.com",emailNotifier.getEmail());
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        BDDMockito.then(mockEmailNotifier)
+                        .should().sendRegisterEmail(captor.capture());
+
+        String realEmail=captor.getValue();
+
+        assertEquals("email@email.com",realEmail);
     }
 }
